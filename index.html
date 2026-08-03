@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday 🎂</title>
+
+<!-- ════════════════════════════════════════════════════════════
+     🎂  HOW TO EDIT (easy steps):
+     1) HER_NAME — her name is set to "Sanika" below; change if needed
+     2) Add her photo: find the three [ 📸 ] polaroid cards below
+        and replace the placeholder <div class="photo-slot">
+        with <img src="your-photo.jpg" alt="...">
+     3) Background music: the song is "Kavita.mp3" (same folder).
+        To change it, replace the file or edit the <audio> sources below.
+     4) Share: open this file in a browser, or drag the folder to
+        https://app.netlify.com/drop to get a shareable link
+     ════════════════════════════════════════════════════════════ -->
+<script>
+  // ✏️  CHANGE HER NAME HERE
+  const HER_NAME = "Sanika";
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script:wght@500;700&family=Mukta:wght@300;400;500;600;700&family=Tiro+Devanagari+Marathi:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --night-1: #0a0f24;
+    --night-2: #141b3d;
+    --night-3: #241a4a;
+    --gold: #ffd166;
+    --rose: #ff8fab;
+    --lav: #b8a6ff;
+    --mint: #7ef0c8;
+    --cream: #fff6e9;
+    --muted: #c9c3e8;
+    --card: rgba(255, 255, 255, 0.055);
+    --card-brd: rgba(255, 255, 255, 0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Mukta", "Tiro Devanagari Marathi", sans-serif;
+    background: radial-gradient(1200px 800px at 80% -10%, var(--night-3), transparent 60%),
+                radial-gradient(1000px 700px at -10% 30%, #1a2a5e, transparent 55%),
+                linear-gradient(180deg, var(--night-1), var(--night-2) 55%, var(--night-3));
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--rose); color: #2a0b1a; }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: var(--night-1); }
+  ::-webkit-scrollbar-thumb { background: #3d3570; border-radius: 8px; }
+  ::-webkit-scrollbar-thumb:hover { background: #5a4fa0; }
+
+  /* ── background canvas (stars / confetti / fireworks) ── */
+  #fx {
+    position: fixed; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 40;
+  }
+
+  /* ── moon ── */
+  .moon {
+    position: fixed; top: 9vh; right: 8vw;
+    width: clamp(90px, 12vw, 150px); height: clamp(90px, 12vw, 150px);
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #fffdf2, #ffe9a8 55%, #ffd166 90%);
+    box-shadow: 0 0 60px 18px rgba(255, 209, 102, 0.35), 0 0 140px 40px rgba(255, 209, 102, 0.12);
+    z-index: 1;
+    animation: moonGlow 5s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  .moon::before, .moon::after {
+    content: ""; position: absolute; border-radius: 50%;
+    background: rgba(190, 150, 80, 0.25);
+  }
+  .moon::before { width: 22%; height: 22%; top: 28%; left: 24%; }
+  .moon::after  { width: 14%; height: 14%; top: 55%; left: 55%; }
+  @keyframes moonGlow { from { box-shadow: 0 0 50px 14px rgba(255,209,102,.28), 0 0 120px 30px rgba(255,209,102,.10);} to { box-shadow: 0 0 70px 22px rgba(255,209,102,.42), 0 0 160px 46px rgba(255,209,102,.15);} }
+
+  /* ── floating balloons (celebration only) ── */
+  #balloons { position: fixed; inset: 0; pointer-events: none; z-index: 5; display: none; }
+  body.celebrating #balloons { display: block; }
+  .balloon {
+    position: absolute; bottom: -160px;
+    width: 54px; height: 68px; border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+    animation: floatUp linear infinite;
+    opacity: .9;
+  }
+  .balloon::before {
+    content: ""; position: absolute; left: 50%; bottom: -18px; transform: translateX(-50%);
+    width: 2px; height: 18px; background: rgba(255,255,255,.35);
+  }
+  .balloon::after {
+    content: ""; position: absolute; left: 50%; bottom: -22px; transform: translateX(-50%);
+    border-left: 5px solid transparent; border-right: 5px solid transparent;
+    border-top: 7px solid rgba(255,255,255,.4);
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) translateX(0) rotate(-2deg); }
+    50%  { transform: translateY(-55vh) translateX(24px) rotate(3deg); }
+    100% { transform: translateY(-115vh) translateX(-16px) rotate(-3deg); }
+  }
+
+  /* ── COUNTDOWN SCREEN ── */
+  #pre {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 24px;
+    background:
+      radial-gradient(600px 400px at 50% 0%, rgba(255,209,102,.08), transparent 60%),
+      linear-gradient(180deg, var(--night-1), #0d1430 60%, var(--night-2));
+    transition: opacity .9s ease, transform .9s ease, visibility .9s;
+  }
+  #pre.gone { opacity: 0; transform: scale(1.06); visibility: hidden; pointer-events: none; }
+
+  #pre .kicker { font-size: 1.1rem; color: var(--gold); letter-spacing: 2px; opacity: .9; margin-bottom: 8px; font-weight: 500; }
+  #pre h2 {
+    font-family: "Dancing Script", cursive;
+    font-size: clamp(1.9rem, 6vw, 3rem);
+    color: var(--cream); margin-bottom: 6px;
+  }
+  #pre .mood { color: var(--muted); font-size: clamp(.95rem, 3vw, 1.05rem); margin-bottom: 34px; max-width: 460px; }
+
+  .clock { display: flex; gap: clamp(8px, 2.5vw, 18px); justify-content: center; flex-wrap: wrap; }
+  .clock .unit {
+    background: var(--card); border: 1px solid var(--card-brd);
+    backdrop-filter: blur(8px);
+    border-radius: 16px; padding: 14px 10px 10px; min-width: clamp(68px, 18vw, 92px);
+    box-shadow: 0 8px 30px rgba(0,0,0,.35);
+  }
+  .clock .num {
+    font-family: "Mukta", sans-serif; font-weight: 700;
+    font-size: clamp(1.9rem, 8vw, 2.9rem); line-height: 1.1;
+    color: var(--gold);
+    text-shadow: 0 0 18px rgba(255,209,102,.45);
+  }
+  .clock .lbl { font-size: .72rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+
+  .preview-btn {
+    margin-top: 34px; cursor: pointer;
+    background: linear-gradient(120deg, var(--rose), #ff7aa8);
+    color: #3a0d22; border: none; border-radius: 999px;
+    padding: 12px 26px; font-family: inherit; font-weight: 700; font-size: .95rem;
+    box-shadow: 0 8px 24px rgba(255,143,171,.35);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .preview-btn:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 12px 30px rgba(255,143,171,.5); }
+  .preview-btn:active { transform: scale(.97); }
+
+  #pre .hint { margin-top: 14px; font-size: .82rem; color: #8d88b8; }
+  #pre .heart-float { animation: beat 1.4s ease-in-out infinite; display: inline-block; }
+  @keyframes beat { 0%,100% { transform: scale(1);} 30% { transform: scale(1.25);} 60% { transform: scale(.95);} }
+
+  /* ── MAIN CONTENT ── */
+  main { position: relative; z-index: 2; opacity: 0; visibility: hidden; transition: opacity 1s ease, visibility 1s; }
+  body.celebrating main { opacity: 1; visibility: visible; }
+
+  section { max-width: 880px; margin: 0 auto; padding: 74px 22px; position: relative; }
+
+  .section-eyebrow {
+    display: inline-block; font-size: .78rem; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); border: 1px solid rgba(255,209,102,.35);
+    padding: 5px 14px; border-radius: 999px; margin-bottom: 14px;
+    background: rgba(255,209,102,.06);
+  }
+  h2.section-title {
+    font-family: "Dancing Script", cursive;
+    font-size: clamp(2rem, 6vw, 2.7rem); color: var(--cream);
+    margin-bottom: 10px;
+  }
+  .section-sub { color: var(--muted); font-size: 1rem; max-width: 600px; margin-bottom: 34px; }
+
+  /* ── hero ── */
+  #hero { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding-top: 20vh; }
+  #hero .stamp {
+    font-size: .85rem; letter-spacing: 2px; color: var(--lav);
+    border: 1px dashed rgba(184,166,255,.45); padding: 6px 16px; border-radius: 999px;
+    margin-bottom: 22px; opacity: 0; animation: fadeUp .9s .2s forwards;
+  }
+  #hero h1 {
+    font-family: "Great Vibes", "Tiro Devanagari Marathi", "Dancing Script", cursive;
+    font-size: clamp(2.9rem, 11vw, 5.2rem); font-weight: 400;
+    color: var(--gold); /* fallback for browsers without background-clip:text */
+    animation: shine 6s linear infinite, fadeUp 1s .35s forwards;
+    opacity: 0;
+    line-height: 1.2; margin-bottom: 10px;
+  }
+  @supports (-webkit-background-clip: text) or (background-clip: text) {
+    #hero h1 {
+      background: linear-gradient(120deg, var(--gold), var(--rose), var(--lav), var(--gold));
+      background-size: 300% 100%;
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  @keyframes shine { to { background-position: 300% 0; } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px);} to { opacity: 1; transform: translateY(0);} }
+
+  #hero .tagline { color: var(--muted); max-width: 520px; font-size: clamp(1rem, 3.5vw, 1.15rem); opacity: 0; animation: fadeUp 1s .55s forwards; }
+
+  .scroll-hint { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); color: var(--muted); font-size: .85rem; opacity: .75; animation: bounce 2s infinite; }
+  @keyframes bounce { 0%,100% { transform: translate(-50%,0);} 50% { transform: translate(-50%,10px);} }
+
+  /* ── generic card ── */
+  .card {
+    background: var(--card); border: 1px solid var(--card-brd);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 14px 40px rgba(0,0,0,.35);
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 22px 50px rgba(0,0,0,.45); border-color: rgba(255,209,102,.4); }
+
+  /* ── story timeline ── */
+  .timeline { position: relative; padding-left: 30px; }
+  .timeline::before {
+    content: ""; position: absolute; left: 9px; top: 6px; bottom: 6px; width: 2px;
+    background: linear-gradient(180deg, var(--gold), var(--rose), var(--lav), transparent);
+  }
+  .tl-item { position: relative; margin-bottom: 26px; opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+  .tl-item.visible { opacity: 1; transform: translateY(0); }
+  .tl-item .dot {
+    position: absolute; left: -30px; top: 22px; width: 20px; height: 20px; border-radius: 50%;
+    background: var(--night-2); border: 3px solid var(--gold);
+    box-shadow: 0 0 0 5px rgba(255,209,102,.12), 0 0 16px rgba(255,209,102,.5);
+  }
+  .tl-item .card { padding: 20px 24px; }
+  .tl-item .card .t-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .tl-item .card .t-emoji { font-size: 1.5rem; }
+  .tl-item .card h3 { font-size: 1.18rem; font-weight: 600; color: var(--cream); }
+  .tl-item .card .t-lbl { font-size: .72rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--lav); margin-bottom: 6px; }
+  .tl-item .card p { color: #d9d4f0; font-size: 1rem; }
+
+  /* ── about grid ── */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px; }
+  .grid .card { padding: 20px; }
+  .grid .card .g-emoji { font-size: 1.9rem; display: block; margin-bottom: 8px; }
+  .grid .card h4 { font-size: 1.05rem; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+  .grid .card p { color: #d9d4f0; font-size: .93rem; }
+  .grid .card { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .grid .card.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── nicknames ── */
+  .names { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; }
+  .name-card {
+    position: relative; padding: 20px 26px; text-align: center;
+    min-width: 150px; cursor: default;
+  }
+  .name-card .n-emoji { font-size: 1.7rem; }
+  .name-card .n-name {
+    font-family: "Tiro Devanagari Marathi", "Mukta", serif;
+    font-size: 1.5rem; font-weight: 700; color: var(--cream); margin: 6px 0 4px;
+  }
+  .name-card .n-note { color: var(--muted); font-size: .85rem; }
+  .name-card:hover .n-name { color: var(--rose); }
+  .name-card .n-flutter { position: absolute; top: -8px; right: -6px; font-size: 1.2rem; opacity: 0; transition: opacity .3s, transform .3s; transform: rotate(10deg) scale(.6); }
+  .name-card:hover .n-flutter { opacity: 1; transform: rotate(0) scale(1); }
+
+  /* ── photo wall ── */
+  .polaroids { display: flex; flex-wrap: wrap; gap: 22px; justify-content: center; }
+  .polaroid {
+    background: #fff8ec; padding: 12px 12px 16px; border-radius: 6px;
+    transform: rotate(var(--rot, 0deg));
+    box-shadow: 0 16px 40px rgba(0,0,0,.5);
+    transition: transform .35s ease, box-shadow .35s ease;
+    width: min(240px, 78vw);
+  }
+  .polaroid:nth-child(odd)  { --rot: -3deg; }
+  .polaroid:nth-child(even) { --rot: 2.5deg; }
+  .polaroid:hover { transform: rotate(0) scale(1.05); box-shadow: 0 22px 55px rgba(0,0,0,.6); z-index: 5; position: relative; }
+  .photo-slot {
+    width: 100%; aspect-ratio: 4/5;
+    border: 2px dashed #c9a56a; border-radius: 4px;
+    background: linear-gradient(135deg, #f7ead2, #f0d9b0);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    color: #a9834f; font-size: .9rem; text-align: center; padding: 12px;
+  }
+  .photo-slot .big { font-size: 2.4rem; }
+  .polaroid .cap { margin-top: 10px; font-family: "Dancing Script", cursive; font-size: 1.15rem; color: #6b5330; text-align: center; }
+  .polaroid img { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; display: block; }
+
+  /* ── cake ── */
+  .cake-wrap { text-align: center; padding: 20px 0 10px; }
+  .cake-scene { position: relative; display: inline-block; }
+  .flame-row { display: flex; justify-content: center; gap: 18px; margin-bottom: -4px; position: relative; z-index: 3; }
+  .flame {
+    width: 14px; height: 24px; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    background: radial-gradient(circle at 50% 80%, #fff3c4, #ffb347 60%, #ff6b35);
+    box-shadow: 0 0 18px 6px rgba(255, 160, 60, .55);
+    animation: flicker .28s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+  }
+  .flame.out { animation: none; background: transparent; box-shadow: none; }
+  .flame.out::after { content: "💨"; position: absolute; top: -18px; left: -2px; font-size: 1rem; }
+  @keyframes flicker { from { transform: scaleY(1) rotate(-2deg);} to { transform: scaleY(1.15) rotate(2deg);} }
+  .cake {
+    position: relative; width: 200px; height: 130px; margin: 0 auto;
+    border-radius: 14px 14px 10px 10px;
+    background: linear-gradient(180deg, #ffe1ec 0%, #f8b8d0 55%, #ee8fb4 100%);
+    box-shadow: inset 0 -18px 30px rgba(180, 70, 110, .25), 0 18px 40px rgba(0,0,0,.45);
+  }
+  .cake::before {
+    content: ""; position: absolute; top: -14px; left: 0; right: 0; height: 22px;
+    background: linear-gradient(180deg, #ffd9e6, #f6b7cd);
+    border-radius: 12px 12px 4px 4px;
+  }
+  .cake::after {
+    content: ""; position: absolute; bottom: -10px; left: -14px; right: -14px; height: 24px;
+    background: linear-gradient(180deg, #9b6fd0, #7b52b5); border-radius: 8px;
+    box-shadow: 0 8px 18px rgba(0,0,0,.4);
+  }
+  .drip { position: absolute; top: 6px; left: 0; right: 0; height: 16px; background: repeating-linear-gradient(90deg, transparent 0 18px, #fff 18px 26px); opacity: .9; }
+  .candle { position: absolute; bottom: 96px; width: 7px; height: 34px; background: repeating-linear-gradient(45deg, #ffd166 0 6px, #fff 6px 8px); border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,.3); }
+  .cake .candle:nth-child(2) { left: calc(50% - 34px); } /* note: .drip is 1st child */
+  .cake .candle:nth-child(3) { left: calc(50% - 6px); }
+  .cake .candle:nth-child(4) { left: calc(50% + 22px); }
+  .blow-btn {
+    margin-top: 26px; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 1rem;
+    background: linear-gradient(120deg, var(--gold), #ffb347); color: #3d2a05; border: none;
+    border-radius: 999px; padding: 13px 30px;
+    box-shadow: 0 10px 26px rgba(255,209,102,.35);
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .blow-btn:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 14px 34px rgba(255,209,102,.5); }
+  .blow-btn:active { transform: scale(.96); }
+  .wish-line { margin-top: 14px; color: var(--muted); font-size: .95rem; min-height: 1.6em; }
+  .wish-line.final { color: var(--gold); font-weight: 600; }
+
+  /* ── letter ── */
+  #letter .card { padding: 36px 32px; max-width: 620px; margin: 0 auto; position: relative; }
+  #letter .card::before {
+    content: "🦋"; position: absolute; top: -20px; left: 26px; font-size: 2rem;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); transform: rotate(-12deg);
+  }
+  #letter .to { font-family: "Dancing Script", cursive; font-size: 1.6rem; color: var(--rose); margin-bottom: 16px; }
+  #letter .letter-body { white-space: pre-line; color: #ddd8f2; font-size: 1.02rem; }
+  #letter .sign { margin-top: 22px; font-family: "Dancing Script", cursive; font-size: 1.7rem; color: var(--gold); }
+  #letter .ps { margin-top: 18px; font-size: .9rem; color: var(--muted); }
+
+  /* ── footer ── */
+  footer { text-align: center; padding: 40px 20px 60px; color: var(--muted); font-size: .9rem; }
+  footer .music-toggle {
+    margin-top: 18px; cursor: pointer; background: var(--card); color: var(--cream);
+    border: 1px solid var(--card-brd); border-radius: 999px; padding: 10px 22px;
+    font-family: inherit; font-size: .9rem;
+    transition: transform .2s ease, border-color .2s ease;
+  }
+  footer .music-toggle:hover { transform: scale(1.05); border-color: var(--gold); }
+  footer .music-toggle.playing { animation: musicPulse 1.3s ease-in-out infinite; border-color: var(--gold); color: var(--gold); }
+  @keyframes musicPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0.45); }
+    50% { box-shadow: 0 0 0 14px rgba(255, 209, 102, 0); }
+  }
+
+  /* ── floating hearts ── */
+  .float-heart {
+    position: fixed; z-index: 50; pointer-events: none;
+    font-size: 1.4rem; animation: heartUp 1.6s ease-out forwards;
+  }
+  @keyframes heartUp {
+    0%   { transform: translateY(0) scale(.6) rotate(0deg); opacity: 0; }
+    15%  { opacity: .95; }
+    100% { transform: translateY(-150px) scale(1.25) rotate(18deg); opacity: 0; }
+  }
+
+  /* ── reveal on scroll ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .devider { height: 1px; max-width: 500px; margin: 0 auto; background: linear-gradient(90deg, transparent, rgba(255,209,102,.35), transparent); }
+
+  @media (max-width: 640px) {
+    section { padding: 60px 18px; }
+    .timeline { padding-left: 26px; }
+    .tl-item .dot { left: -26px; }
+    .moon { top: 6vh; right: 6vw; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .2s !important; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="moon" aria-hidden="true"></div>
+<div id="balloons" aria-hidden="true"></div>
+
+<!-- 🎵 Background song — your audio file, same folder as this page -->
+<audio id="song" loop preload="auto" aria-hidden="true">
+  <source src="Kavita.mp3" type="audio/mpeg">
+  <source src="Kavita-1.m4a" type="audio/mp4">
+</audio>
+
+<!-- ═══════════ COUNTDOWN (12 AM) ═══════════ -->
+<div id="pre">
+  <div class="kicker">🕛 The 12:00 AM Countdown</div>
+  <h2>Time left until your birthday...</h2>
+  <p class="mood">Wait just a moment — a special surprise is coming at 12 AM 😉<br>Keep your eyes closed until then.</p>
+  <div class="clock">
+    <div class="unit"><div class="num" id="c-d">00</div><div class="lbl">Days</div></div>
+    <div class="unit"><div class="num" id="c-h">00</div><div class="lbl">Hours</div></div>
+    <div class="unit"><div class="num" id="c-m">00</div><div class="lbl">Minutes</div></div>
+    <div class="unit"><div class="num" id="c-s">00</div><div class="lbl">Seconds</div></div>
+  </div>
+  <button class="preview-btn" id="previewBtn">👀 Sneak a peek?</button>
+  <p class="hint">Only you are here — promise 😌 <span class="heart-float">❤️</span></p>
+</div>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<main>
+  <!-- HERO -->
+  <section id="hero">
+    <span class="stamp">🎂 Your Day • Our Story</span>
+    <h1 id="heroName">Happy Birthday!</h1>
+    <p class="tagline">My butterfly, today is all about you.
+    I may be far away, but my heart is right beside you. ❤️</p>
+    <div class="scroll-hint">Scroll down — it's all for you ↓</div>
+  </section>
+
+  <div class="devider"></div>
+
+  <!-- CAKE -->
+  <section id="cake">
+    <span class="section-eyebrow">🎂 The Cake</span>
+    <h2 class="section-title">Blow Out the Candles First!</h2>
+    <p class="section-sub" style="margin:0 auto 10px;">Ready? Make a wish in your heart and blow them all out. 🕯️</p>
+    <div class="cake-wrap">
+      <div class="cake-scene">
+        <div class="flame-row">
+          <div class="flame" id="fl1"></div>
+          <div class="flame" id="fl2"></div>
+          <div class="flame" id="fl3"></div>
+        </div>
+        <div class="cake">
+          <div class="drip"></div>
+          <div class="candle"></div><div class="candle"></div><div class="candle"></div>
+        </div>
+      </div>
+      <button class="blow-btn" id="blowBtn">💨 Blow Them Out!</button>
+      <p class="wish-line" id="wishLine">(Tap the button to make your wish!)</p>
+    </div>
+  </section>
+
+  <div class="devider"></div>
+
+  <!-- STORY -->
+  <section id="story">
+    <span class="section-eyebrow">💌 Our Story</span>
+    <h2 class="section-title">3 Months, 3 Meetings, One Amazing Love Story</h2>
+    <p class="section-sub">I never told you this, but I relive every one of these memories every single day...</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <span class="dot"></span>
+        <div class="card">
+          <div class="t-lbl">The Beginning</div>
+          <div class="t-head"><span class="t-emoji">🏡</span><h3>At Nani's Village</h3></div>
+          <p>I went to my nani's village for her last ritual. We stayed there for 3-4 days. And right there, when I first saw you — I don't know how it happened, but my heart quietly got stuck on you.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="dot"></span>
+        <div class="card">
+          <div class="t-lbl">The Talks Begin</div>
+          <div class="t-head"><span class="t-emoji">💬</span><h3>WhatsApp Nights</h3></div>
+          <p>After I got back from the village, the messages started. We'd talk till late at night. I began waiting for every single reply of yours — I only realised that later.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="dot"></span>
+        <div class="card">
+          <div class="t-lbl">First Meet</div>
+          <div class="t-head"><span class="t-emoji">🛵</span><h3>The Scooty Ride</h3></div>
+          <p>You came on your scooty to pick me up. I sat behind you, but my heart had already wandered off somewhere. 😄</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="dot"></span>
+        <div class="card">
+          <div class="t-lbl">Near the Temple</div>
+          <div class="t-head"><span class="t-emoji">☕</span><h3>The Café Moment</h3></div>
+          <p>We went to the café near the temple. There, you put your hand on mine to check — <em>"Oh wow, your hand is so big!"</em> And that little teasing with our feet... those memories still make me smile. I'll never forget that moment.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="dot"></span>
+        <div class="card">
+          <div class="t-lbl">Second Meet</div>
+          <div class="t-head"><span class="t-emoji">🛕</span><h3>At the Temple</h3></div>
+          <p>We met again the next day. We sat quietly in the temple. I told God everything in my heart — and to be honest? That prayer was all about you.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <span class="dot"></span>
+        <div class="card">
+          <div class="t-lbl">And Now...</div>
+          <div class="t-head"><span class="t-emoji">✈️</span><h3>Long Distance</h3></div>
+          <p>Before I left for Bangalore, I met you three times. Now we're far apart. But no matter the distance, my heart is still with you. You're far away — but to me, you're right here. ❤️</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="devider"></div>
+
+  <!-- ABOUT HER -->
+  <section id="about">
+    <span class="section-eyebrow">✨ About You</span>
+    <h2 class="section-title">What Exactly Is "You"?</h2>
+    <p class="section-sub">The little things I love about you —</p>
+    <div class="grid">
+      <div class="card"><span class="g-emoji">🧴</span><h4>Skincare</h4><p>With all your skincare knowledge, I'm pretty sure you'll launch your own beauty brand soon!</p></div>
+      <div class="card"><span class="g-emoji">🏗️</span><h4>Civil Engineer</h4><p>Roads, buildings, designs — you're literally building the world. So proud of you.</p></div>
+      <div class="card"><span class="g-emoji">🛍️</span><h4>Shopping &amp; Style</h4><p>Shopping is your true sport! And your western style — always different, always beautiful.</p></div>
+      <div class="card"><span class="g-emoji">👛</span><h4>Clutches</h4><p>Your eyes light up when you see a clutch. I know — I can always tell!</p></div>
+      <div class="card"><span class="g-emoji">🍝</span><h4>Spaghetti</h4><p>Your favourite dish. One day I'll learn to make it myself — okay, honestly, I'll at least try!</p></div>
+      <div class="card"><span class="g-emoji">😴</span><h4>Sleeping</h4><p>Your favourite hobby — sleeping! And honestly, that's what I find the cutest. I love watching you sleep peacefully.</p></div>
+      <div class="card"><span class="g-emoji">🙏</span><h4>Spiritual</h4><p>You're calm, simple, and full of faith. And I believe — meeting you was something written in the stars.</p></div>
+    </div>
+  </section>
+
+  <div class="devider"></div>
+
+  <!-- NICKNAMES -->
+  <section id="names">
+    <span class="section-eyebrow">🦋 My Names For You</span>
+    <h2 class="section-title">What I Call You</h2>
+    <p class="section-sub" style="margin-bottom:30px;">All these names are playful — but the love is real 😄</p>
+    <div class="names">
+      <div class="card name-card"><span class="n-flutter">🦋</span><span class="n-emoji">🦋</span><div class="n-name">फुलपाखरू</div><div class="n-note">"Fulpakhru" — Butterfly. Because you fluttered into my life just like that.</div></div>
+      <div class="card name-card"><span class="n-flutter">😄</span><span class="n-emoji">😄</span><div class="n-name">डोंबडी</div><div class="n-note">"Dombdi" — my adorable little troublemaker. Whatever the name, you're mine.</div></div>
+      <div class="card name-card"><span class="n-flutter">😜</span><span class="n-emoji">😜</span><div class="n-name">वागर</div><div class="n-note">"Wagar" — saved only for when I'm mad at you! But still cute even then.</div></div>
+      <div class="card name-card"><span class="n-flutter">💕</span><span class="n-emoji">💕</span><div class="n-name">सानू</div><div class="n-note">"Sanu" — calm, sweet, simple. That's exactly you.</div></div>
+      <div class="card name-card"><span class="n-flutter">😏</span><span class="n-emoji">😏</span><div class="n-name">बायको</div><div class="n-note">"Byko" — just a nickname for now... but one day, it'll be real.</div></div>
+    </div>
+  </section>
+
+  <div class="devider"></div>
+
+  <!-- PHOTOS -->
+  <section id="photos">
+    <span class="section-eyebrow">📸 Our Memories</span>
+    <h2 class="section-title">Our Photos</h2>
+    <p class="section-sub">Our memory photos go here soon... (I don't have the photos yet, but I've got every memory in my heart 😌)</p>
+    <div class="polaroids">
+      <div class="polaroid">
+        <div class="photo-slot"><span class="big">📸</span><span>Add our photo<br>right here</span></div>
+        <div class="cap">Our first meeting</div>
+      </div>
+      <div class="polaroid">
+        <div class="photo-slot"><span class="big">☕</span><span>Add our photo<br>right here</span></div>
+        <div class="cap">The café moment</div>
+      </div>
+      <div class="polaroid">
+        <div class="photo-slot"><span class="big">🛕</span><span>Add our photo<br>right here</span></div>
+        <div class="cap">At the temple</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="devider"></div>
+
+  <!-- LETTER -->
+  <section id="letter">
+    <span class="section-eyebrow">💌 A Letter</span>
+    <h2 class="section-title">A Letter For You</h2>
+    <div class="card">
+      <div class="to">Dear <span id="letterName">Sanika</span>,</div>
+      <div class="letter-body" id="letterBody"></div>
+      <div class="sign">— Your man</div>
+      <p class="ps">P.S. — Your smile is my favourite thing in the world. Please keep smiling every day. 🦋</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>Made with love, just for you ❤️</p>
+    <p style="margin-top:6px; font-size:.82rem; color:#8d88b8;">This is just the beginning of our 3-month love story</p>
+    <button class="music-toggle" id="musicBtn">🎵 Play music</button>
+  </footer>
+</main>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   1. BACKGROUND FX — stars, confetti, fireworks (single canvas)
+   ═══════════════════════════════════════════════════════════ */
+const cv = document.getElementById("fx");
+const ctx = cv.getContext("2d");
+let W, H, DPR;
+function sizeCanvas() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = W * DPR; cv.height = H * DPR;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+sizeCanvas();
+window.addEventListener("resize", sizeCanvas);
+
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// stars
+const stars = Array.from({ length: 110 }, () => ({
+  x: Math.random(), y: Math.random(),
+  r: Math.random() * 1.4 + 0.4,
+  tw: Math.random() * Math.PI * 2,
+  sp: Math.random() * 0.02 + 0.005
+}));
+
+function drawStars(t) {
+  for (const s of stars) {
+    const a = reduceMotion ? 0.6 : 0.35 + 0.65 * Math.abs(Math.sin(s.tw + t * s.sp * 8));
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 245, 210, ${a})`;
+    ctx.fill();
+  }
+}
+
+// particle systems
+let confetti = [];
+let bursts = [];
+
+function spawnConfetti(n, x, y, opts = {}) {
+  const colors = ["#ffd166", "#ff8fab", "#b8a6ff", "#7ef0c8", "#ffb347", "#ffffff"];
+  for (let i = 0; i < n; i++) {
+    const ang = opts.angle !== undefined ? opts.angle : Math.random() * Math.PI * 2;
+    const spd = opts.spread !== undefined ? opts.spread : Math.random() * 9 + 3;
+    confetti.push({
+      x, y,
+      vx: Math.cos(ang) * spd,
+      vy: Math.sin(ang) * spd - (opts.up ? 4 : 0),
+      w: Math.random() * 8 + 4, h: Math.random() * 6 + 3,
+      rot: Math.random() * Math.PI, vr: (Math.random() - 0.5) * 0.3,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      life: 1, decay: opts.decay || 0.008 + Math.random() * 0.008,
+      shape: Math.random() > 0.5 ? "rect" : "circle"
+    });
+  }
+}
+
+function firework() {
+  const x = W * (0.2 + Math.random() * 0.6);
+  const y = H * (0.15 + Math.random() * 0.35);
+  spawnConfetti(70, x, y, { spread: 7, up: 0 });
+  bursts.push({ x, y, t: 0 });
+}
+
+function drawParticles() {
+  // confetti
+  for (let i = confetti.length - 1; i >= 0; i--) {
+    const p = confetti[i];
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.18;               // gravity
+    p.rot += p.vr;
+    p.life -= p.decay;
+    if (p.life <= 0 || p.y > H + 40) { confetti.splice(i, 1); continue; }
+    ctx.save();
+    ctx.translate(p.x, p.y); ctx.rotate(p.rot);
+    ctx.globalAlpha = Math.max(p.life, 0);
+    ctx.fillStyle = p.color;
+    if (p.shape === "rect") ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+    else { ctx.beginPath(); ctx.arc(0, 0, p.w / 2, 0, Math.PI * 2); ctx.fill(); }
+    ctx.restore();
+  }
+  // expanding ring flash for fireworks
+  for (let i = bursts.length - 1; i >= 0; i--) {
+    const b = bursts[i];
+    b.t += 0.06;
+    if (b.t > 1) { bursts.splice(i, 1); continue; }
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, 6 + b.t * 70, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255, 220, 150, ${(1 - b.t) * 0.6})`;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+}
+
+let celebrateT = 0;
+let prevT = 0;
+function loop(t) {
+  const dt = t - prevT; prevT = t;
+  ctx.clearRect(0, 0, W, H);
+  drawStars(t * 0.001);
+
+  if (document.body.classList.contains("celebrating") && !reduceMotion) {
+    // occasional background confetti while celebrating
+    celebrateT += dt;
+    if (celebrateT > 650 && Math.random() < 0.5) {
+      spawnConfetti(28, Math.random() * W, -10, { angle: Math.PI / 2, spread: 2.5, up: 0, decay: 0.006 });
+      celebrateT = 0;
+    }
+    if (Math.random() < 0.012) firework();
+    drawParticles();
+  }
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+
+/* ═══════════════════════════════════════════════════════════
+   2. COUNTDOWN — tonight 12:00 AM
+   ═══════════════════════════════════════════════════════════ */
+// 📅 OPTIONAL: put her birthday as "YYYY-MM-DD" (e.g. "2026-08-04").
+// Then the site counts down to that day's 12:00 AM, and if she opens it
+// during her birthday itself (after midnight), it celebrates right away.
+const BIRTHDAY_DATE = "";
+
+let target;
+if (BIRTHDAY_DATE) {
+  const [y, m, d] = BIRTHDAY_DATE.split("-").map(Number);
+  target = new Date(y, m - 1, d, 0, 0, 0, 0); // her birthday, 12:00 AM
+} else {
+  target = new Date();
+  target.setHours(24, 0, 0, 0); // next midnight (12:00 AM tonight)
+}
+
+const pad = n => String(n).padStart(2, "0");
+function tick() {
+  const diff = target - Date.now();
+  if (diff <= 0) { enterCelebration(); return; }
+  document.getElementById("c-d").textContent = pad(Math.floor(diff / 86400000));
+  document.getElementById("c-h").textContent = pad(Math.floor(diff / 3600000) % 24);
+  document.getElementById("c-m").textContent = pad(Math.floor(diff / 60000) % 60);
+  document.getElementById("c-s").textContent = pad(Math.floor(diff / 1000) % 60);
+}
+setInterval(tick, 1000);
+tick();
+
+document.getElementById("previewBtn").addEventListener("click", () => {
+  enterCelebration();
+  musicToggle(true);
+});
+
+/* ═══════════════════════════════════════════════════════════
+   3. CELEBRATION MODE
+   ═══════════════════════════════════════════════════════════ */
+let celebrated = false;
+function enterCelebration() {
+  if (celebrated) return;
+  celebrated = true;
+  document.body.classList.add("celebrating");
+  document.getElementById("pre").classList.add("gone");
+  document.getElementById("heroName").textContent = `Happy Birthday, ${HER_NAME}! 🎂`;
+  document.getElementById("letterName").textContent = HER_NAME;
+  document.title = `Happy Birthday, ${HER_NAME}! 🎂`;
+  makeBalloons();
+  // big celebration burst
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => spawnConfetti(120, W / 2, H * 0.45, { spread: 9, up: 1, decay: 0.007 }), i * 250);
+  }
+  setTimeout(() => firework(), 300);
+  setTimeout(() => firework(), 1200);
+}
+
+// balloons
+function makeBalloons() {
+  const wrap = document.getElementById("balloons");
+  const colors = ["#ff8fab", "#ffd166", "#b8a6ff", "#7ef0c8", "#ffb347", "#f6a8e0"];
+  for (let i = 0; i < 9; i++) {
+    const b = document.createElement("div");
+    b.className = "balloon";
+    const left = Math.random() * 95;
+    const size = 0.8 + Math.random() * 0.6;
+    b.style.left = left + "vw";
+    b.style.width = 54 * size + "px";
+    b.style.height = 68 * size + "px";
+    b.style.background = `radial-gradient(circle at 32% 28%, rgba(255,255,255,.75), ${colors[i % colors.length]} 65%)`;
+    b.style.animationDuration = 14 + Math.random() * 10 + "s";
+    b.style.animationDelay = -Math.random() * 15 + "s";
+    wrap.appendChild(b);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   4. CAKE — blow candles
+   ═══════════════════════════════════════════════════════════ */
+let candlesOut = false;
+document.getElementById("blowBtn").addEventListener("click", () => {
+  if (candlesOut) return;
+  candlesOut = true;
+  document.querySelectorAll(".flame").forEach((f, i) => {
+    setTimeout(() => f.classList.add("out"), i * 180);
+  });
+  const line = document.getElementById("wishLine");
+  line.textContent = "✨ Wish made! Happy Birthday! May every wish of yours come true. 🎉";
+  line.classList.add("final");
+  spawnConfetti(200, W / 2, H * 0.35, { spread: 10, up: 1, decay: 0.006 });
+  setTimeout(() => firework(), 200);
+  setTimeout(() => firework(), 700);
+  playHappyBirthday();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   5. MUSIC — plays your audio file "Kavita-1.m4a" in a loop.
+      If that file can't load (old browser), it falls back to a
+      gentle music-box loop. Happy Birthday melody = candle blow.
+   ═══════════════════════════════════════════════════════════ */
+const song = document.getElementById("song");
+let songWorks = true;
+song.addEventListener("error", () => { songWorks = false; });
+song.addEventListener("canplaythrough", () => { songWorks = true; }, { once: true });
+
+let audioCtx = null;
+let musicOn = false;
+let musicTimer = null;
+
+function ensureAudio() {
+  if (!audioCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (AC) audioCtx = new AC();
+  }
+  if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+  return audioCtx;
+}
+
+function note(freq, start, dur, vol = 0.16, type = "triangle") {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.value = freq;
+  g.gain.setValueAtTime(0, start);
+  g.gain.linearRampToValueAtTime(vol, start + 0.04);
+  g.gain.exponentialRampToValueAtTime(0.0001, start + dur);
+  osc.connect(g); g.connect(audioCtx.destination);
+  osc.start(start); osc.stop(start + dur + 0.1);
+}
+
+// "Happy Birthday" melody (plays when she blows out the candles)
+const N = { C4: 261.63, D4: 293.66, E4: 329.63, F4: 349.23, G4: 392.0, A4: 440.0, Bb4: 466.16, C5: 523.25 };
+const HB = [
+  ["C4", 0], ["C4", 0.5], ["D4", 1], ["C4", 1.5], ["F4", 2], ["E4", 2.7],
+  ["C4", 3.4], ["C4", 3.9], ["D4", 4.4], ["C4", 4.9], ["G4", 5.4], ["F4", 6.1],
+  ["C4", 6.8], ["C4", 7.3], ["C5", 7.8], ["A4", 8.3], ["F4", 8.8], ["E4", 9.5], ["D4", 10.2],
+  ["Bb4", 10.8], ["Bb4", 11.3], ["A4", 11.8], ["F4", 12.3], ["G4", 12.8], ["F4", 13.5]
+];
+function playHappyBirthday() {
+  // lower the song's volume while the melody plays, then bring it back
+  if (songWorks && !song.paused && song.volume > 0.5) {
+    song.volume = 0.12;
+    setTimeout(() => { song.volume = 0.75; }, 16000);
+  }
+  const c = ensureAudio(); if (!c) return;
+  const t0 = c.currentTime + 0.05;
+  HB.forEach(([k, t]) => note(N[k], t0 + t, 1.1, 0.14, "sine"));
+}
+
+// gentle music-box loop — fallback if the audio file isn't available
+const BOX = [523.25, 659.25, 783.99, 1046.5, 783.99, 659.25, 587.33, 659.25];
+function startMusic() {
+  const c = ensureAudio(); if (!c) return;
+  const t0 = c.currentTime;
+  BOX.forEach((f, i) => note(f, t0 + i * 0.42, 1.5, 0.05, "sine"));
+  musicTimer = setTimeout(startMusic, BOX.length * 420);
+}
+function stopMusic() {
+  clearTimeout(musicTimer); musicTimer = null;
+}
+
+const musicBtn = document.getElementById("musicBtn");
+function updateMusicBtn() {
+  musicBtn.textContent = musicOn ? "⏸ Pause music" : "🎵 Play music";
+  musicBtn.classList.toggle("playing", musicOn);
+}
+
+let playGen = 0; // guards against stale async results after rapid toggling
+function startFileMusic() {
+  const gen = ++playGen;
+  song.loop = true;
+  song.volume = 0.75;
+  const p = song.play();
+  if (p && typeof p.catch === "function") {
+    p.catch(() => {
+      if (gen !== playGen) return; // a newer attempt replaced this one
+      if (!songWorks || !song.duration) {
+        // the file itself can't be played (codec/load) — use the music-box fallback
+        if (musicOn) startMusic();
+        return;
+      }
+      // autoplay blocked by the browser (no user gesture) — flip state back
+      musicOn = false;
+      updateMusicBtn();
+    });
+  }
+}
+function stopFileMusic() {
+  song.pause();
+  song.currentTime = 0;
+}
+
+function musicToggle(forceOn) {
+  const want = forceOn !== undefined ? forceOn : !musicOn;
+  musicOn = want;
+  updateMusicBtn();
+  if (musicOn) {
+    stopMusic(); // in case the fallback was running
+    if (songWorks) { startFileMusic(); }
+    else { startMusic(); }
+  } else {
+    stopFileMusic();
+    stopMusic();
+  }
+}
+musicBtn.addEventListener("click", () => musicToggle());
+
+/* ═══════════════════════════════════════════════════════════
+   6. FLOATING HEARTS on click / tap
+   ═══════════════════════════════════════════════════════════ */
+const EMO = ["❤️", "💖", "💕", "🦋", "✨", "💫"];
+document.addEventListener("click", e => {
+  if (reduceMotion) return;
+  const h = document.createElement("span");
+  h.className = "float-heart";
+  h.textContent = EMO[Math.floor(Math.random() * EMO.length)];
+  h.style.left = (e.clientX - 12) + "px";
+  h.style.top = (e.clientY - 12) + "px";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 1700);
+});
+
+/* ═══════════════════════════════════════════════════════════
+   7. REVEAL ON SCROLL
+   ═══════════════════════════════════════════════════════════ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) { en.target.classList.add("visible"); io.unobserve(en.target); }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll(".tl-item, .grid .card").forEach(el => io.observe(el));
+
+/* ═══════════════════════════════════════════════════════════
+   8. LETTER BODY
+   ═══════════════════════════════════════════════════════════ */
+document.getElementById("letterBody").textContent =
+`Three months ago, I saw you for the first time at nani's village. I didn't know then — that my life was about to become this beautiful.
+
+These three months with you — the late-night WhatsApp talks, the scooty ride, that hand-on-hand moment at the café, the quiet prayer at the temple. All of it feels so small. But to me — it's everything.
+
+There's an 8-year gap between us. Sometimes I feel — it's too much. But then I remember your smile, and I feel — there's no distance at all. You're far away, but you're in my heart every single day.
+
+Today is your birthday. I'm here, from far away — but in my heart, I'm standing right next to you.
+
+Happy Birthday, my butterfly. Keep smiling like this forever. Your smile is my favourite thing in the world. 🦋`;
+</script>
+</body>
+</html>
